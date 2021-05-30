@@ -54,6 +54,12 @@ func TestSetUpdate(t *testing.T) {
 	require.NotEqual(t, updatedCache.Value, cache.Value)
 }
 
+func TestDelete(t *testing.T) {
+	cache := cacheRandomEntry(t)
+	err := testQueries.Delete(context.Background(), cache.Key)
+	require.NoError(t, err)
+}
+
 func BenchmarkSet(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		arg := SetParams{

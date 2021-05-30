@@ -8,6 +8,16 @@ import (
 	"database/sql"
 )
 
+const delete = `-- name: Delete :exec
+DELETE from cache 
+WHERE key = $1
+`
+
+func (q *Queries) Delete(ctx context.Context, key string) error {
+	_, err := q.db.ExecContext(ctx, delete, key)
+	return err
+}
+
 const get = `-- name: Get :one
 SELECT key, value, ttl from cache 
 WHERE key = $1 LIMIT 1

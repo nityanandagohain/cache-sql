@@ -14,3 +14,7 @@ DO UPDATE SET value = $2, ttl = $3 RETURNING *;
 -- name: Get :one
 SELECT * from cache 
 WHERE key = $1 LIMIT 1;
+
+-- name: Delete :exec
+DELETE from cache 
+WHERE key = $1;
