@@ -10,49 +10,45 @@ import (
 
 const delete = `-- name: Delete :exec
 DELETE from cache 
-WHERE key = $1
+WHERE cache_key = ?
 `
 
-func (q *Queries) Delete(ctx context.Context, key string) error {
-	_, err := q.db.ExecContext(ctx, delete, key)
+func (q *Queries) Delete(ctx context.Context, cacheKey string) error {
+	_, err := q.db.ExecContext(ctx, delete, cacheKey)
 	return err
 }
 
 const get = `-- name: Get :one
-SELECT key, value, ttl from cache 
-WHERE key = $1 LIMIT 1
+SELECT cache_key, value, ttl from cache 
+WHERE cache_key = ? LIMIT 1
 `
 
-func (q *Queries) Get(ctx context.Context, key string) (Cache, error) {
-	row := q.db.QueryRowContext(ctx, get, key)
+func (q *Queries) Get(ctx context.Context, cacheKey string) (Cache, error) {
+	row := q.db.QueryRowContext(ctx, get, cacheKey)
 	var i Cache
-	err := row.Scan(&i.Key, &i.Value, &i.Ttl)
+	err := row.Scan(&i.CacheKey, &i.Value, &i.Ttl)
 	return i, err
 }
 
-const set = `-- name: Set :one
+const set = `-- name: Set :exec
 INSERT INTO cache (
-    key, 
+    cache_key, 
     value, 
     ttl
 )
 VALUES (
-    $1, $2, $3
+    ?, ?, ?
 )
-ON CONFLICT (key) 
-DO UPDATE SET value = $2, ttl = $3 RETURNING key, value, ttl
 `
 
 type SetParams struct {
-	Key   string        `json:"key"`
-	Value string        `json:"value"`
-	Ttl   sql.NullInt32 `json:"ttl"`
+	CacheKey string        `json:"cache_key"`
+	Value    string        `json:"value"`
+	Ttl      sql.NullInt32 `json:"ttl"`
 }
 
 // postgres has implicit tansaction for single statement
-func (q *Queries) Set(ctx context.Context, arg SetParams) (Cache, error) {
-	row := q.db.QueryRowContext(ctx, set, arg.Key, arg.Value, arg.Ttl)
-	var i Cache
-	err := row.Scan(&i.Key, &i.Value, &i.Ttl)
-	return i, err
+func (q *Queries) Set(ctx context.Context, arg SetParams) error {
+	_, err := q.db.ExecContext(ctx, set, arg.CacheKey, arg.Value, arg.Ttl)
+	return err
 }

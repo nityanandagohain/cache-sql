@@ -7,7 +7,7 @@ import (
 )
 
 type Cache struct {
-	Key   string        `json:"key"`
-	Value string        `json:"value"`
-	Ttl   sql.NullInt32 `json:"ttl"`
+	CacheKey string        `json:"cache_key"`
+	Value    string        `json:"value"`
+	Ttl      sql.NullInt32 `json:"ttl"`
 }

@@ -1,20 +1,18 @@
--- name: Set :one
+-- name: Set :exec
 -- postgres has implicit tansaction for single statement
 INSERT INTO cache (
-    key, 
+    cache_key, 
     value, 
     ttl
 )
 VALUES (
-    $1, $2, $3
-)
-ON CONFLICT (key) 
-DO UPDATE SET value = $2, ttl = $3 RETURNING *;
+    ?, ?, ?
+);
 
 -- name: Get :one
 SELECT * from cache 
-WHERE key = $1 LIMIT 1;
+WHERE cache_key = ? LIMIT 1;
 
 -- name: Delete :exec
 DELETE from cache 
-WHERE key = $1;
+WHERE cache_key = ?;

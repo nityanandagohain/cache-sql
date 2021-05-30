@@ -6,15 +6,15 @@ import (
 	"os"
 	"testing"
 
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var testQueries *Queries
 var testDb *sql.DB
 
 const (
-	dbDriver = "postgres"
-	dbSource = "postgres://postgres:changeforproduction@localhost/postgres?sslmode=disable"
+	dbDriver = "mysql"
+	dbSource = "root:pass@tcp(localhost:3306)/cache"
 )
 
 func TestMain(m *testing.M) {

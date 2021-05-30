@@ -29,7 +29,7 @@ func RandomString(n int) string {
 }
 
 func RandomKey() string {
-	return "key-" + RandomString(6)
+	return "k" + RandomString(8)
 }
 
 func RandomValue() string {
