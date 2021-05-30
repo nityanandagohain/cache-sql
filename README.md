@@ -1,5 +1,4 @@
-## Using postgres as a cache
-
+## Using mysql as a cache
 
 
 ## steps to run
@@ -9,6 +8,8 @@
 * test `go test ./db/sqlc`
 * benchmark `go test -bench=. -benchtime 2000x ./db/sqlc`
 
+
+Were are using mysql memory engine with caching to achieve this.
 
 ## Without query cache
 ![alt text](./without-cache.png "With query cahce")
@@ -45,3 +46,7 @@ select * from cache;
 select * from cache where cache_key="k5";
 SHOW PROFILES;
 ```
+
+
+
+https://www.youtube.com/watch?v=dxNT4_1qiA8
